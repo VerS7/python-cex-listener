@@ -1,0 +1,42 @@
+{
+  "poll_interval_seconds": 300,
+  "page_size": 1000,
+  "page_delay_seconds": 0.15,
+  "limit": 0,
+  "output_db": "cex_listener.db",
+  "events_jsonl": "events.jsonl",
+  "emit_initial_created": false,
+  "filters": {
+    "exchange": ["BINANCE", "OKX", "BYBIT"],
+    "type": ["spot", "swap"],
+    "quote": ["USDT"],
+    "min_volume": 1000000
+  },
+  "thresholds": {
+    "price_relative_change_min": 0.001,
+    "volume_relative_change_min": 0.05,
+    "change_abs_delta_min": 0.25,
+    "rating_abs_delta_min": 0.1
+  },
+  "auth": {
+    "cookie": null,
+    "cookie_file": null
+  },
+  "sinks": {
+    "stdout": true,
+    "jsonl": true,
+    "webhook_url": null
+  },
+  "sheet_export": {
+    "enabled": true,
+    "path": "signals_for_sheet.csv",
+    "template": "Лонг1",
+    "event_templates": {
+      "created": "Лонг1",
+      "removed": "Шорт 1",
+      "changed.price.up": "Лонг1",
+      "changed.price.down": "Шорт 1",
+      "changed.volume_24h": "Объём 50%"
+    }
+  }
+}

@@ -69,3 +69,29 @@ python .\tradingview_cex_exporter.py --columns ticker,exchange,price,volume_24h 
 ```powershell
 python .\tradingview_cex_exporter.py --exchange BINANCE --dry-run
 ```
+
+## Listener MVP
+
+`listener.py` хранит последний snapshot в SQLite, сравнивает новые данные с baseline и пишет события в stdout, JSONL, SQLite и опциональный CSV для импорта в Google Sheets.
+
+Первый запуск создает baseline без массового шума:
+
+```powershell
+Copy-Item .\listener_config.example.json .\listener_config.json
+python .\listener.py once --config .\listener_config.json --verbose
+```
+
+Постоянный режим:
+
+```powershell
+python .\listener.py run --config .\listener_config.json --verbose
+```
+
+Статус и экспорт событий:
+
+```powershell
+python .\listener.py status --db .\cex_listener.db
+python .\listener.py export-events --db .\cex_listener.db -o events.csv
+```
+
+Для формата как в примерной Google-таблице включен `sheet_export`: CSV пишется с колонками `Тикер,Время,Дата,Шаблон`. Шаблоны задаются в `listener_config.json` через `sheet_export.template` и `sheet_export.event_templates`, например `changed.price.up -> Лонг1`.
